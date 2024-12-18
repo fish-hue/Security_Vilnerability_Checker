@@ -22,27 +22,27 @@ findings = {
     "weak_cryptographic_algorithms": []
 }
 
-# Define regex patterns as constants
+# Define regex patterns as constants (removed `(?i)` for simplicity)
 SECRET_PATTERNS_HARDCODED = [
-    r"(?i)(api_key|password|secret|token|aws_access_key_id|aws_secret_access_key|client_id|client_secret|private_key|auth_token|db_password|username|login|access_token|access_key)",
-    r"(?i)(key=|passwd=|apikey=|authorization=|credentials=|secret_key=|bearer_token=|secret_token=|app_id=|rds_password|mongo_password|azure_secret|gcp_api_key|firebase_token|jwt_secret)"
+    r"(api_key|password|secret|token|aws_access_key_id|aws_secret_access_key|client_id|client_secret|private_key|auth_token|db_password|username|login|access_token|access_key)",
+    r"(key=|passwd=|apikey=|authorization=|credentials=|secret_key=|bearer_token=|secret_token=|app_id=|rds_password|mongo_password|azure_secret|gcp_api_key|firebase_token|jwt_secret)"
 ]
 
 SQL_PATTERNS = [
-    r"(?i)(select.*from.*where|insert.*into.*values|drop.*table|union.*select.*from)",
-    r"(?i)(--\s*|#.*|select.*sleep|select.*benchmark)",
-    r"(?i)('|\");*--|or\s+1=1"
+    r"(select.*from.*where|insert.*into.*values|drop.*table|union.*select.*from)",
+    r"(--\s*|#.*|select.*sleep|select.*benchmark)",
+    r"('|\");*--|or\s+1=1"
 ]
 
 XSS_PATTERNS = [
-    r"(?i)(<script.*>.*</script.*>)",
-    r"(?i)(<img.*src=.*onerror=.*>)",
-    r"(?i)(<iframe.*src=.*javascript:.*>)",
-    r"(?i)(<.*?document\.cookie.*?>)"
+    r"(<script.*>.*</script.*>)",
+    r"(<img.*src=.*onerror=.*>)",
+    r"(<iframe.*src=.*javascript:.*>)",
+    r"(<.*?document\.cookie.*?>)"
 ]
 
 WEAK_CRYPTO_PATTERNS = [
-    r"(?i)(md5|sha1)"
+    r"(md5|sha1)"
 ]
 
 HTTP_HEADERS = [
@@ -61,7 +61,8 @@ def validate_directory(directory: str) -> None:
 def check_files_with_regex(directory: str, patterns: list, allowed_extensions: set, findings_key: str) -> None:
     """Check for patterns in files with specified extensions in the given directory."""
     logging.info(f"Checking for patterns in '{directory}'...")
-    regex = re.compile('|'.join(patterns))
+    
+    regex = re.compile('|'.join(patterns), re.IGNORECASE)  # Compile with case-insensitive flag
     matched_files = []
 
     for filepath in Path(directory).rglob('*'):
@@ -103,7 +104,6 @@ def check_cves(package_name: str) -> None:
     try:
         response = requests.get(nvd_url)
         response.raise_for_status()
-
         data = response.json()
         cve_items = data.get("vulnerabilities", [])
 
