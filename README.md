@@ -36,5 +36,5 @@ This script performs a set of security checks on your codebase to identify vulne
 To run the security checks on a codebase:
 
 ```bash
-python scvuln.py example_project/ --url http://example.com 
+python scvuln.py example_project http://example.com 
 
