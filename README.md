@@ -29,7 +29,7 @@ This script performs a set of security checks on your codebase to identify vulne
 ## Usage
 
 ### Command-line Arguments
-- `directory`: The directory to scan for vulnerabilities.
+- `directory`: The directory to scan for vulnerabilities. (see included example_project)
 - `--url` (optional): A URL to check for insecure HTTP headers. Default is `http://example.com`.
 
 ### Example Usage:
